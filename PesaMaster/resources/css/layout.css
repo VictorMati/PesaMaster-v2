@@ -1,0 +1,41 @@
+/* Apply Global Styling */
+body {
+    font-family: 'Figtree', sans-serif;
+    background-color: #f8fdf6; /* Light greenish background */
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Container */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Logo */
+.logo {
+    margin-bottom: 20px;
+}
+
+.logo-icon {
+    width: 80px;
+    height: 80px;
+}
+
+/* Content Box */
+.content-box {
+    background: #ffffff;
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}

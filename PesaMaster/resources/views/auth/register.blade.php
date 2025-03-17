@@ -1,52 +1,115 @@
 <x-guest-layout>
+    <head>
+        <link rel="stylesheet" href="{{ asset('resources/css/register.css') }}">
+        
+    </head>
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
-        <!-- Name -->
+        <!-- Owner Details -->
+        <h2>Owner Details</h2>
+
         <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <label for="staff_no">Staff No</label>
+            <input id="staff_no" type="text" name="staff_no" value="{{ old('staff_no') }}" required autofocus>
+            @error('staff_no')
+                <p>{{ $message }}</p>
+            @enderror
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div>
+            <label for="name">Full Name</label>
+            <input id="name" type="text" name="name" value="{{ old('name') }}" required>
+            @error('name')
+                <p>{{ $message }}</p>
+            @enderror
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div>
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" value="{{ old('email') }}" required>
+            @error('email')
+                <p>{{ $message }}</p>
+            @enderror
         </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        <div>
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" required>
+            @error('password')
+                <p>{{ $message }}</p>
+            @enderror
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
+        <div>
+            <label for="password_confirmation">Confirm Password</label>
+            <input id="password_confirmation" type="password" name="password_confirmation" required>
+        </div>
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
+        <div>
+            <label for="role_id">Role</label>
+            <select id="role_id" name="role_id" required>
+                <option value="1">Business Owner</option>
+                <!-- Add more roles if needed -->
+            </select>
+        </div>
+
+        <!-- Business Details -->
+        <h2>Business Details</h2>
+
+        <div>
+            <label for="business_name">Business Name</label>
+            <input id="business_name" type="text" name="business_name" value="{{ old('business_name') }}" required>
+            @error('business_name')
+                <p>{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label for="phone_number">Phone Number</label>
+            <input id="phone_number" type="text" name="phone_number" value="{{ old('phone_number') }}" required>
+            @error('phone_number')
+                <p>{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label for="business_email">Business Email</label>
+            <input id="business_email" type="email" name="business_email" value="{{ old('business_email') }}" required>
+            @error('business_email')
+                <p>{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label for="business_type">Business Type</label>
+            <select id="business_type" name="business_type" required>
+                <option value="retail">Retail</option>
+                <option value="Wholesale">Wholesale</option>
+                <option value="manufacturing">Manufacturing</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="address">Address</label>
+            <input id="address" type="text" name="address" value="{{ old('address') }}">
+        </div>
+
+        <div>
+            <label for="status">Status</label>
+            <select id="status" name="status">
+                <option value="active" selected>Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="suspended">Suspended</option>
+            </select>
+        </div>
+
+        <div>
+            <button type="submit">Register</button>
+        </div>
+
+        <div>
+            <a href="{{ route('login') }}">Already have an account? Login</a>
         </div>
     </form>
 </x-guest-layout>

@@ -10,7 +10,7 @@ class MpesaTransaction extends Model
     use HasFactory;
     protected $fillable = [
         'transaction_id', 'user_id', 'phone_number', 'amount',
-        'status', 'receipt_number', 'date', 'response_code', 'response_message'
+        'status', 'receipt_number', 'transaction_date', 'response_code', 'response_message'
     ];
 
     public function user()

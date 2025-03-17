@@ -1,0 +1,79 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8fdf6; /* Light greenish background */
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Centered Login Form */
+form {
+    background: #ffffff; /* Whitish background */
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Input Fields */
+input[type="email"],
+input[type="password"],
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+}
+
+/* Labels */
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 12px;
+}
+
+/* Buttons */
+button {
+    background-color: #4caf50; /* Green accent */
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Links */
+a {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #4caf50;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Error Messages */
+p {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Remember Me Checkbox */
+input[type="checkbox"] {
+    margin-right: 5px;
+}

@@ -9,7 +9,7 @@ class FailedLoginAttempt extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'attempt_time', 'ip_address'];
+    protected $fillable = ['user_id', 'attempt_time'];
 
     public function user()
     {
