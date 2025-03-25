@@ -13,8 +13,13 @@ return new class extends Migration
     {
         Schema::create('credit_transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('credit_account_id')->constrained('credit_accounts')->onDelete('cascade');
+            $table->string('type'); // e.g., loan, repayment
+            $table->decimal('amount', 10, 2);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
+
     }
 
     /**

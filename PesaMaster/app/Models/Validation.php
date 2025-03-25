@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Validation extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'entity',
+        'field',
+        'rule',
+        'message',
+    ];
 }

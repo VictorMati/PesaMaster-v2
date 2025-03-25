@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Validations Table (Remove if unnecessary)
         Schema::create('validations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('validation_type'); // e.g., phone, ID verification
+            $table->string('status'); // e.g., pending, approved, rejected
             $table->timestamps();
         });
     }

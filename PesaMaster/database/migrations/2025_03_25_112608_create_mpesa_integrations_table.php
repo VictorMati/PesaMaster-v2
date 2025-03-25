@@ -11,8 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mpesa_integrations', function (Blueprint $table) {
+         // Mpesa Integrations Table
+         Schema::create('mpesa_integrations', function (Blueprint $table) {
             $table->id();
+            $table->string('business_shortcode');
+            $table->string('consumer_key');
+            $table->string('consumer_secret');
+            $table->string('passkey');
+            $table->string('callback_url');
             $table->timestamps();
         });
     }

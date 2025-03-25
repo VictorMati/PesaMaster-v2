@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('credit_accounts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->decimal('credit_limit', 10, 2);
+            $table->decimal('current_balance', 10, 2);
+            $table->string('status'); // e.g., active, inactive
             $table->timestamps();
         });
     }

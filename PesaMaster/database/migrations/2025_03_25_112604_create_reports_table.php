@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('type'); // e.g., financial, audit, usage
+            $table->string('file_path');
+            $table->string('status'); // e.g., generated, pending
             $table->timestamps();
         });
     }

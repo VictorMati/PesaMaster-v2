@@ -8,4 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Budget extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'category',
+        'limit',
+        'current_expense',
+        'start_date',
+        'end_date',
+        'status',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
