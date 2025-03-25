@@ -1,7 +1,6 @@
 <x-guest-layout>
     <head>
         <link rel="stylesheet" href="{{ asset('resources/css/register.css') }}">
-        
     </head>
     <form method="POST" action="{{ route('register') }}">
         @csrf
@@ -18,9 +17,17 @@
         </div>
 
         <div>
-            <label for="name">Full Name</label>
-            <input id="name" type="text" name="name" value="{{ old('name') }}" required>
-            @error('name')
+            <label for="firstname">First Name</label>
+            <input id="firstname" type="text" name="firstname" value="{{ old('firstname') }}" required>
+            @error('firstname')
+                <p>{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label for="lastname">Last Name</label>
+            <input id="lastname" type="text" name="lastname" value="{{ old('lastname') }}" required>
+            @error('lastname')
                 <p>{{ $message }}</p>
             @enderror
         </div>
@@ -44,14 +51,6 @@
         <div>
             <label for="password_confirmation">Confirm Password</label>
             <input id="password_confirmation" type="password" name="password_confirmation" required>
-        </div>
-
-        <div>
-            <label for="role_id">Role</label>
-            <select id="role_id" name="role_id" required>
-                <option value="1">Business Owner</option>
-                <!-- Add more roles if needed -->
-            </select>
         </div>
 
         <!-- Business Details -->
@@ -85,7 +84,7 @@
             <label for="business_type">Business Type</label>
             <select id="business_type" name="business_type" required>
                 <option value="retail">Retail</option>
-                <option value="Wholesale">Wholesale</option>
+                <option value="wholesale">Wholesale</option>
                 <option value="manufacturing">Manufacturing</option>
             </select>
         </div>
@@ -93,15 +92,6 @@
         <div>
             <label for="address">Address</label>
             <input id="address" type="text" name="address" value="{{ old('address') }}">
-        </div>
-
-        <div>
-            <label for="status">Status</label>
-            <select id="status" name="status">
-                <option value="active" selected>Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="suspended">Suspended</option>
-            </select>
         </div>
 
         <div>

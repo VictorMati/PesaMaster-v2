@@ -1,15 +1,15 @@
 <x-guest-layout>
     <head>
-        <link rel="stylesheet" href="{{ asset('resources/css/login.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/login.css') }}">
     </head>
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <!-- Email Address -->
+        <!-- Staff Number -->
         <div>
-            <label for="email">Email</label>
-            <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
-            @error('email')
+            <label for="staff_no">Staff Number</label>
+            <input id="staff_no" type="text" name="staff_no" value="{{ old('staff_no') }}" required autofocus>
+            @error('staff_no')
                 <p>{{ $message }}</p>
             @enderror
         </div>
@@ -30,14 +30,17 @@
             </label>
         </div>
 
+        <!-- Forgot Password -->
         <div>
             <a href="{{ route('password.request') }}">Forgot your password?</a>
         </div>
 
+        <!-- Submit Button -->
         <div>
             <button type="submit">Login</button>
         </div>
 
+        <!-- Registration Link -->
         <div>
             <a href="{{ route('register') }}">Don't have an account? Register</a>
         </div>

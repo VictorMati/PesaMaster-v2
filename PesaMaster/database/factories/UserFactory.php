@@ -26,15 +26,17 @@ class UserFactory extends Factory
     {
         return [
             'staff_no' => $this->faker->unique()->randomNumber(6),
-            'name' => fake()->name(),
+            'firstname' => fake()->firstName(),
+            'lastname' => fake()->lastName(), 
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'profile_picture' => $this->faker->imageUrl(200, 200, 'people'),
             'status' => 'active',
-            'role_id' => Role::factory(),
+            'user_type' => 'owner',
             'remember_token' => Str::random(10),
         ];
+
     }
 
     /**

@@ -31,16 +31,35 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'staff_no' => ['required', 'string', 'max:255', 'unique:users'],
+            'firstname' => ['required', 'string', 'max:255'],
+            'lastname' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'business_name' => ['required', 'string', 'max:255'],
+            'phone_number' => ['required', 'string', 'max:20'],
+            'business_email' => ['required', 'string', 'lowercase', 'email', 'max:255'],
+            'business_type' => ['required', 'string', 'max:50'],
+            'address' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user = User::create([
-            'name' => $request->name,
+            'staff_no' => $request->staff_no,
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'user_type' => 'owner', // Default user type as owner
         ]);
+
+        // Store business details in session or create a separate Business model if needed
+        session(['business_details' => [
+            'business_name' => $request->business_name,
+            'phone_number' => $request->phone_number,
+            'business_email' => $request->business_email,
+            'business_type' => $request->business_type,
+            'address' => $request->address,
+        ]]);
 
         event(new Registered($user));
 

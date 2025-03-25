@@ -1,36 +1,73 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+    <!-- Styles -->
+    @vite(['resources/css/app.css', 'resources/css/layout.css', 'resources/js/app.js'])
+</head>
+<body class="font-sans antialiased">
+    <div class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="{{ asset('images/logo.png') }}" alt="Company Logo" class="logo">
+                <span class="company-name">{{ config('app.name', 'Laravel') }}</span>
+                <button class="toggle-sidebar">☰</button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="{{ route('dashboard') }}"><i class="icon-dashboard"></i> Dashboard</a></li>
+                    <li><a href="{{ route('transactions') }}"><i class="icon-transactions"></i> Transactions</a></li>
+                    <li><a href="{{ route('accounts') }}"><i class="icon-wallet"></i> Accounts</a></li>
+                    <li><a href="{{ route('budget') }}"><i class="icon-budget"></i> Budget</a></li>
+                    <li><a href="{{ route('savings') }}"><i class="icon-savings"></i> Savings</a></li>
+                    <li><a href="{{ route('investments') }}"><i class="icon-investments"></i> Investments</a></li>
+                    <li><a href="{{ route('reports') }}"><i class="icon-reports"></i> Reports</a></li>
+                    <li><a href="{{ route('profile') }}"><i class="icon-user"></i> Profile</a></li>
+                    <li><a href="{{ route('settings') }}"><i class="icon-settings"></i> Settings</a></li>
+                    <li><a href="{{ route('support') }}"><i class="icon-support"></i> Support</a></li>
+                    <li>
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <i class="icon-logout"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                    @csrf
+                </form>
+            </nav>
+        </aside>
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header Bar -->
+            <header class="header-bar">
+                <div class="header-left">
+                    <button class="toggle-sidebar">☰</button>
+                    <h1>Welcome, {{ Auth::user()->name ?? 'User' }}</h1>
+                </div>
+                <div class="header-right">
+                    <input type="text" placeholder="Search..." class="search-bar">
+                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="icon-logout"></i>
+                    </a>
+                </div>
+            </header>
 
             <!-- Page Content -->
-            <main>
+            <main class="content">
                 {{ $slot }}
             </main>
         </div>
-    </body>
+    </div>
+</body>
 </html>

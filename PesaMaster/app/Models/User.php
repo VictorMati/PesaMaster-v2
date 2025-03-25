@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -18,14 +17,15 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'firstname',
+        'lastname',
         'staff_no',
         'email',
         'password',
         'profile_picture',
         'signup_date',
         'status',
-        'role_id'
+        'user_type',
     ];
 
     /**
@@ -48,9 +48,18 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function role()
+    public function setStaffNoAttribute($value)
     {
-        return $this->belongsTo(Role::class);
+        // Ensure "PM" is only added if it's not already present
+        $this->attributes['staff_no'] = str_starts_with($value, 'PM') ? $value : 'PM' . $value;
+    }
+
+    /**
+     * Relationship with Business Model.
+     */
+    public function business()
+    {
+        return $this->hasOne(Business::class);
     }
 
     public function transactions()

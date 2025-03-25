@@ -1,0 +1,131 @@
+/* Root styles for the entire application */
+:root {
+    /* Theme Colors */
+    --primary-color: #a8e6cf; /* Light Green */
+    --accent-color: #4CAF50;  /* Green Accent */
+
+    /* Background & Foreground */
+    --bg-light: #f8f9fa;
+    --bg-dark: #2c3e50;
+    --text-light: #ffffff;
+    --text-dark: #333333;
+
+    /* Status Colors */
+    --success-color: #2ecc71;
+    --error-color: #e74c3c;
+    --warning-color: #f39c12;
+    --info-color: #3498db;
+
+    /* Borders & Shadows */
+    --border-radius: 8px;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    /* Typography */
+    --font-family: 'Figtree', sans-serif;
+    --font-size-base: 16px;
+    --font-size-lg: 18px;
+    --font-size-sm: 14px;
+
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+}
+
+/* General Styles */
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
+}
+
+/* Buttons */
+button {
+    background-color: var(--accent-color);
+    color: var(--text-light);
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background-color: darken(var(--accent-color), 10%);
+}
+
+/* Alerts */
+.alert {
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    margin: var(--spacing-md) 0;
+    font-size: var(--font-size-sm);
+}
+
+.alert-success {
+    background-color: var(--success-color);
+    color: var(--text-light);
+}
+
+.alert-error {
+    background-color: var(--error-color);
+    color: var(--text-light);
+}
+
+.alert-warning {
+    background-color: var(--warning-color);
+    color: var(--text-light);
+}
+
+.alert-info {
+    background-color: var(--info-color);
+    color: var(--text-light);
+}
+
+/* Cards */
+.card {
+    background: var(--text-light);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: var(--primary-color);
+    width: 250px;
+    min-height: 100vh;
+    transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+    width: 70px;
+}
+
+/* Header */
+.header-bar {
+    background-color: var(--accent-color);
+    color: var(--text-light);
+    padding: var(--spacing-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Links */
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: darken(var(--accent-color), 10%);
+}
+
