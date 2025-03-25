@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('type'); // e.g., financial, audit, usage
-            $table->string('file_path');
-            $table->string('status'); // e.g., generated, pending
+            $table->decimal('total_income', 15, 2)->default(0);
+            $table->decimal('total_expenses', 15, 2)->default(0);
+            $table->string('status')->default('pending'); // e.g., generated, pending
+            $table->string('period'); // e.g., "2024-03" for March 2024
             $table->timestamps();
         });
     }

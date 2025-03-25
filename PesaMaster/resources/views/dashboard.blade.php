@@ -1,44 +1,57 @@
+@extends('layouts.app')
 
-    @extends('layouts.app')
+@section('content')
+    {{-- <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}"> --}}
+    @vite('resources/css/dashboard.css')
 
-    @section('content')
-        <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <div class="dashboard-container">
+        {{-- <aside class="sidebar">
+            <h2>Menu</h2>
+            <ul>
+                <li><a href="#">Overview</a></li>
+                <li><a href="#">Budget</a></li>
+                <li><a href="#">Scheduler</a></li>
+                <li><a href="#">Reports</a></li>
+            </ul>
+        </aside> --}}
 
-        <div class="dashboard-container">
-            <aside class="sidebar">
-                <h2>Menu</h2>
-                <ul>
-                    <li><a href="#">Overview</a></li>
-                    <li><a href="#">Budget</a></li>
-                    <li><a href="#">Scheduler</a></li>
-                    <li><a href="#">Reports</a></li>
-                </ul>
-            </aside>
+        <main class="main-content">
+            <h1>Dashboard</h1>
 
-            <main class="main-content">
-                <h1>Dashboard</h1>
-                <div class="widgets-container">
-                    <div class="widget">
-                        <h3>All Transactions</h3>
+            <div class="widgets-container">
+                <!-- Transactions Widget -->
+                <div class="widget">
+                    <h3>All Transactions</h3>
+                    @if($transactions->isEmpty())
+                        <p>No transactions available.</p>
+                    @else
                         <ul>
                             @foreach ($transactions as $transaction)
-                                <li>{{ $transaction->name }} - ${{ $transaction->amount }}</li>
+                                <li>{{ $transaction->name }} - ${{ number_format($transaction->amount, 2) }}</li>
                             @endforeach
                         </ul>
-                    </div>
-
-                    <div class="widget">
-                        <h3>Reports</h3>
-                        <p>Income: ${{ $totalIncome }}</p>
-                        <p>Expenses: ${{ $totalExpenses }}</p>
-                    </div>
-
-                    <div class="widget">
-                        <h3>Budget</h3>
-                        <p>Income: ${{ $budget->income }}</p>
-                        <p>Expenses: ${{ $budget->expenses }}</p>
-                    </div>
+                    @endif
                 </div>
-            </main>
-        </div>
-    @endsection
+
+                <!-- Reports Widget -->
+                <div class="widget">
+                    <h3>Reports</h3>
+                    <p>Income: ${{ number_format($totalIncome, 2) }}</p>
+                    <p>Expenses: ${{ number_format($totalExpenses, 2) }}</p>
+                </div>
+
+                <!-- Budget Widget -->
+                <div class="widget">
+                    <h3>Budget</h3>
+                    @if($budget)
+                        <p>Budget Limit: ${{ number_format($budget->limit, 2) }}</p>
+                        <p>Current Expenses: ${{ number_format($budget->current_expense, 2) }}</p>
+                        <p>Status: {{ ucfirst($budget->status) }}</p>
+                    @else
+                        <p>No budget data available.</p>
+                    @endif
+                </div>
+            </div>
+        </main>
+    </div>
+@endsection

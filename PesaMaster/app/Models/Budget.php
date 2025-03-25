@@ -12,15 +12,19 @@ class Budget extends Model
     protected $fillable = [
         'user_id',
         'category',
-        'limit',
+        'budget_limit',
         'current_expense',
-        'start_date',
-        'end_date',
         'status',
+        'period',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function isExceeded()
+    {
+        return $this->current_expense > $this->budget_limit;
     }
 }

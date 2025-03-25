@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Budgets Table
         Schema::create('budgets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('category'); // e.g., groceries, rent
-            $table->decimal('limit', 10, 2);
-            $table->decimal('current_expense', 10, 2)->default(0);
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->string('status'); // e.g., active, exceeded
+            $table->string('category'); // e.g., groceries, rent, savings
+            $table->decimal('budget_limit', 15, 2);
+            $table->decimal('current_expense', 15, 2)->default(0);
+            $table->string('status')->default('active'); // e.g., active, exceeded
+            $table->string('period'); // e.g., "2024-03" for March 2024
             $table->timestamps();
         });
     }

@@ -26,15 +26,15 @@
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="{{ route('dashboard') }}"><i class="icon-dashboard"></i> Dashboard</a></li>
-                    <li><a href="{{ route('transactions') }}"><i class="icon-transactions"></i> Transactions</a></li>
-                    <li><a href="{{ route('accounts') }}"><i class="icon-wallet"></i> Accounts</a></li>
-                    <li><a href="{{ route('budget') }}"><i class="icon-budget"></i> Budget</a></li>
-                    <li><a href="{{ route('savings') }}"><i class="icon-savings"></i> Savings</a></li>
-                    <li><a href="{{ route('investments') }}"><i class="icon-investments"></i> Investments</a></li>
-                    <li><a href="{{ route('reports') }}"><i class="icon-reports"></i> Reports</a></li>
-                    <li><a href="{{ route('profile') }}"><i class="icon-user"></i> Profile</a></li>
-                    <li><a href="{{ route('settings') }}"><i class="icon-settings"></i> Settings</a></li>
-                    <li><a href="{{ route('support') }}"><i class="icon-support"></i> Support</a></li>
+                    <li><a href="#"><i class="icon-transactions"></i> Transactions</a></li>
+                    <li><a href="#"><i class="icon-wallet"></i> Accounts</a></li>
+                    <li><a href="#"><i class="icon-budget"></i> Budget</a></li>
+                    <li><a href="#"><i class="icon-savings"></i> Savings</a></li>
+                    <li><a href="#"><i class="icon-investments"></i> Investments</a></li>
+                    <li><a href="#"><i class="icon-reports"></i> Reports</a></li>
+                    <li><a href="#"><i class="icon-user"></i> Profile</a></li>
+                    <li><a href="#"><i class="icon-settings"></i> Settings</a></li>
+                    <li><a href="#"><i class="icon-support"></i> Support</a></li>
                     <li>
                         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="icon-logout"></i> Logout
@@ -65,7 +65,7 @@
 
             <!-- Page Content -->
             <main class="content">
-                {{ $slot }}
+                @yield('content')
             </main>
         </div>
     </div>

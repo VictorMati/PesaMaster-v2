@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Transaction;
+use App\Models\Report;
+use App\Models\Budget;
 
 class TransactionController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display the dashboard with transactions, reports, and budget data.
      */
     public function index()
     {
-        //
+        
     }
 
     /**

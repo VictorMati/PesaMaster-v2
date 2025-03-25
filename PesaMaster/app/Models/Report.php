@@ -12,8 +12,10 @@ class Report extends Model
     protected $fillable = [
         'user_id',
         'type',
-        'file_path',
+        'total_income',
+        'total_expenses',
         'status',
+        'period',
     ];
 
     public function user()

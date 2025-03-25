@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             BusinessSeeder::class,
             TransactionSeeder::class,
             MpesaTransactionSeeder::class,
+            ReportSeeder::class,
+            BudgetSeeder::class
         ]);
     }
 }
