@@ -14,17 +14,25 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $currentPeriod = Carbon::now()->format('Y-m'); // e.g., "2025-03"
+        $currentPeriod = Carbon::now()->format('Y-m');
 
-        // Get all transactions for the logged-in user
-        $transactions = Transaction::where('user_id', $user->id)->get();
+        // Count daily transactions
+        $dailyTransactionsCount = Transaction::where('user_id', $user->id)
+            ->whereDate('created_at', Carbon::today())
+            ->count();
+
+        // Get latest transactions (last 5)
+        $latestTransactions = Transaction::where('user_id', $user->id)
+            ->latest()
+            ->take(5)
+            ->get();
 
         // Get the latest report for the current period
         $report = Report::where('user_id', $user->id)
             ->where('period', $currentPeriod)
             ->first();
 
-        $totalIncome = $report->total_income ?? 0;
+        $totalIncome = $report->total_income ?? 0; // Ensure it's not undefined
         $totalExpenses = $report->total_expenses ?? 0;
 
         // Get the user's budget for the current period
@@ -32,6 +40,30 @@ class DashboardController extends Controller
             ->where('period', $currentPeriod)
             ->first();
 
-        return view('dashboard', compact('transactions', 'totalIncome', 'totalExpenses', 'budget'));
+        // Get income and expense data for the chart
+        $chartData = Transaction::where('user_id', $user->id)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->selectRaw('DATE(created_at) as date,
+                         SUM(CASE WHEN type = "income" THEN amount ELSE 0 END) as income,
+                         SUM(CASE WHEN type = "expense" THEN amount ELSE 0 END) as expense')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        $chartLabels = $chartData->pluck('date');
+        $incomeData = $chartData->pluck('income');
+        $expenseData = $chartData->pluck('expense');
+
+        return view('dashboard', compact(
+            'dailyTransactionsCount',
+            'latestTransactions',
+            'totalIncome',
+            'totalExpenses',
+            'budget',
+            'chartLabels',
+            'incomeData',
+            'expenseData'
+        ));
     }
+
 }

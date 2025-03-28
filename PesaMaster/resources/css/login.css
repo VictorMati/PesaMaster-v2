@@ -16,12 +16,12 @@ form {
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    width: 500px;
     max-width: 400px;
 }
 
 /* Input Fields */
-input[type="email"],
+input[type="text"],
 input[type="password"],
 button {
     width: 100%;
@@ -41,6 +41,7 @@ label {
 /* Buttons */
 button {
     background-color: #4caf50; /* Green accent */
+    height: 40px;
     color: white;
     font-weight: bold;
     border: none;

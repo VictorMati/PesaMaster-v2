@@ -24,9 +24,14 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::get('/transaction', [TransactionController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index'); // List all transactions
+        Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show'); // View transaction details
+        Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store'); // Create new transaction
+        Route::put('/transactions/{transaction}', [TransactionController::class, 'update'])->name('transactions.update'); // Update transaction
+        Route::delete('/transactions/{transaction}', [TransactionController::class, 'destroy'])->name('transactions.destroy'); // Delete transaction
+    });
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

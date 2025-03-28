@@ -10,18 +10,9 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&display=swap">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('css/guest_layout.css') }}">
 </head>
 <body>
     <div class="container">
-        <!-- Logo Section -->
-        <div class="logo">
-            <a href="/">
-                <img src="{{ asset('images/pesamasterlogo.png') }}" alt="PesaMaster Logo" class="logo-image">
-            </a>
-        </div>
-
         <!-- Main Content -->
         <div class="content-box">
             {{ $slot }}

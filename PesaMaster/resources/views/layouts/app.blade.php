@@ -10,9 +10,11 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 
     <!-- Styles -->
-    @vite(['resources/css/app.css', 'resources/css/layout.css', 'resources/js/app.js'])
+    @vite(['resources/css/layout.css', 'resources/js/layout.js'])
 </head>
 <body class="font-sans antialiased">
     <div class="layout-container">
@@ -21,23 +23,22 @@
             <div class="sidebar-header">
                 <img src="{{ asset('images/logo.png') }}" alt="Company Logo" class="logo">
                 <span class="company-name">{{ config('app.name', 'Laravel') }}</span>
-                <button class="toggle-sidebar">☰</button>
+                <button class="toggle-sidebar"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="{{ route('dashboard') }}"><i class="icon-dashboard"></i> Dashboard</a></li>
-                    <li><a href="#"><i class="icon-transactions"></i> Transactions</a></li>
-                    <li><a href="#"><i class="icon-wallet"></i> Accounts</a></li>
-                    <li><a href="#"><i class="icon-budget"></i> Budget</a></li>
-                    <li><a href="#"><i class="icon-savings"></i> Savings</a></li>
-                    <li><a href="#"><i class="icon-investments"></i> Investments</a></li>
-                    <li><a href="#"><i class="icon-reports"></i> Reports</a></li>
-                    <li><a href="#"><i class="icon-user"></i> Profile</a></li>
-                    <li><a href="#"><i class="icon-settings"></i> Settings</a></li>
-                    <li><a href="#"><i class="icon-support"></i> Support</a></li>
+                    <li><i class="fa-solid fa-chart-line"></i> <a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    <li><i class="fa-solid fa-money-bill-transfer"></i> <a href="{{ route('transactions.index') }}"> Transactions</a></li>
+                    <li><i class="fa-solid fa-wallet"></i><a href="#"> Accounts</a></li>
+                    <li><i class="fa-solid fa-coins"></i><a href="#"> Budget</a></li>
+                    <li><i class="fa-solid fa-piggy-bank"></i><a href="#"> Savings</a></li>
+                    <li><i class="fa-solid fa-chart-pie"></i><a href="#"> Investments</a></li>
+                    <li><i class="fa-solid fa-file-invoice-dollar"></i><a href="#"i> Reports</a></li>
+                    <li><i class="fa-solid fa-headset"></i><a href="#"> Support</a></li>
                     <li>
+                        <i class="fa-solid fa-sign-out-alt"></i>
                         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="icon-logout"></i> Logout
+                            Logout
                         </a>
                     </li>
                 </ul>
@@ -52,14 +53,19 @@
             <!-- Header Bar -->
             <header class="header-bar">
                 <div class="header-left">
-                    <button class="toggle-sidebar">☰</button>
-                    <h1>Welcome, {{ Auth::user()->name ?? 'User' }}</h1>
+                    <h1>Welcome, {{ Auth::user()->firstname ?? 'User' }}</h1>
                 </div>
                 <div class="header-right">
                     <input type="text" placeholder="Search..." class="search-bar">
-                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <i class="icon-logout"></i>
-                    </a>
+                    <div class="profile">
+                        <img src="{{ asset('images/logo.png') }}" alt="profile image">
+                        <select name="profile-dropdown" id="profile-dropdown">
+                            <option value="profile"><a href=" {{ route('profile.edit') }} ">profile</a><i class="icon-user"></i></option>
+                            <option value="settings"><a href="">Settings</a><i class="icon-settings"></i></option>
+                            <option value="logout"><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">logout</a>
+                                <i class="icon-logout"></i></option>
+                        </select>
+                    </div>
                 </div>
             </header>
 

@@ -1,13 +1,23 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Sidebar toggle functionality
     const sidebar = document.querySelector(".sidebar");
     const toggleButtons = document.querySelectorAll(".toggle-sidebar");
+    const toggleIcon = document.querySelector(".toggle-sidebar i");
 
     toggleButtons.forEach(button => {
         button.addEventListener("click", function () {
             sidebar.classList.toggle("collapsed");
+
+            // Toggle between chevron-left and chevron-right
+            if (sidebar.classList.contains("collapsed")) {
+                toggleIcon.classList.remove("fa-chevron-left");
+                toggleIcon.classList.add("fa-chevron-right");
+            } else {
+                toggleIcon.classList.remove("fa-chevron-right");
+                toggleIcon.classList.add("fa-chevron-left");
+            }
         });
     });
+});
 
     // Logout confirmation
     const logoutLinks = document.querySelectorAll("[data-logout]");
@@ -27,4 +37,4 @@ document.addEventListener("DOMContentLoaded", function () {
             this.value = "";
         });
     }
-});
+

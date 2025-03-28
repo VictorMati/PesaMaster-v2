@@ -1,10 +1,16 @@
 <x-guest-layout>
     <head>
-        <link rel="stylesheet" href="{{ asset('resources/css/register.css') }}">
+        @vite(['resources/css/register.css'])
     </head>
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
+                <!-- Logo Section -->
+                <div class="logo">
+                    <a href="/">
+                        <img src="{{ asset('images/logo.png') }}" alt="PesaMaster Logo" class="logo-image">
+                    </a>
+                </div>
         <!-- Owner Details -->
         <h2>Owner Details</h2>
 

@@ -1,9 +1,16 @@
 <x-guest-layout>
     <head>
-        <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+        @vite(['resources/css/login.css'])
     </head>
     <form method="POST" action="{{ route('login') }}">
         @csrf
+
+        <!-- Logo Section -->
+        <div class="logo">
+            <a href="/">
+                <img src="{{ asset('images/logo.png') }}" alt="PesaMaster Logo" class="logo-image">
+            </a>
+        </div>
 
         <!-- Staff Number -->
         <div>
@@ -30,14 +37,14 @@
             </label>
         </div>
 
-        <!-- Forgot Password -->
-        <div>
-            <a href="{{ route('password.request') }}">Forgot your password?</a>
-        </div>
-
         <!-- Submit Button -->
         <div>
-            <button type="submit">Login</button>
+            <button type="submit">Sign in</button>
+        </div>
+
+        <!-- Forgot Password -->
+        <div>
+             <a href="{{ route('password.request') }}">Forgot your password?</a>
         </div>
 
         <!-- Registration Link -->

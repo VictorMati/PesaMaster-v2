@@ -2,7 +2,8 @@
 :root {
     /* Theme Colors */
     --primary-color: #a8e6cf; /* Light Green */
-    --accent-color: #4CAF50;  /* Green Accent */
+    --accent-color: #4CAF50; /* Green Accent */
+    --accent-color-2: #0f9113;
 
     /* Background & Foreground */
     --bg-light: #f8f9fa;
@@ -94,28 +95,6 @@ button:hover {
     box-shadow: var(--box-shadow);
     padding: var(--spacing-lg);
     margin-bottom: var(--spacing-lg);
-}
-
-/* Sidebar */
-.sidebar {
-    background-color: var(--primary-color);
-    width: 250px;
-    min-height: 100vh;
-    transition: width 0.3s ease;
-}
-
-.sidebar.collapsed {
-    width: 70px;
-}
-
-/* Header */
-.header-bar {
-    background-color: var(--accent-color);
-    color: var(--text-light);
-    padding: var(--spacing-md);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 /* Links */

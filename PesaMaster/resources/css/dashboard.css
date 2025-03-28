@@ -4,32 +4,34 @@
 .dashboard-container {
     display: flex;
     min-height: 100vh;
+    padding: 0;
+    margin: 0;
 }
 
 /* Main Content */
 .main-content {
     flex: 1;
-    padding: var(--spacing-xl);
+    padding: var(--spacing-sm);
     background-color: var(--bg-light);
 }
 
 /* Header */
 .main-content h1 {
     font-size: var(--font-size-lg);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-sm);
 }
 
 /* Widgets Container */
 .widgets-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--spacing-lg);
+    display: flex;
+    gap: var(--spacing-md);
 }
 
 /* Individual Widgets */
 .widget {
     background: var(--text-light);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
+    width: 35%;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     transition: transform 0.3s ease;
