@@ -1,7 +1,7 @@
 @extends('layouts.app')
-
+@vite('resources/css/dashboard.css')
 @section('content')
-    @vite('resources/css/dashboard.css')
+
 
     <div class="dashboard-container">
 
@@ -39,13 +39,13 @@
                 </div>
 
                 <!-- Line Graph Widget (Financial Trends) -->
-                <div class="widget">
+                <div class="chart-widget">
                     <h3>Financial Trends</h3>
                     <canvas id="financialChart"></canvas>
                 </div>
 
                 <!-- Latest Transactions Widget -->
-                <div class="widget">
+                <div class="transactions-widget">
                     <h3>Latest Transactions</h3>
                     @if($latestTransactions->isEmpty())
                         <p>No recent transactions.</p>
@@ -65,37 +65,60 @@
                 </div>
             </div>
 
-            {{-- <!-- Include Chart.js for the line graph -->
+            <!-- Include Chart.js for the line graph -->
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
                     var ctx = document.getElementById('financialChart').getContext('2d');
-                    var financialChart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: @json($chartLabels), // Dates
-                            datasets: [
-                                {
-                                    label: 'Income',
-                                    data: @json($incomeData), // Income values
-                                    borderColor: 'green',
-                                    fill: false
-                                },
-                                {
-                                    label: 'Expenses',
-                                    data: @json($expenseData), // Expense values
-                                    borderColor: 'red',
-                                    fill: false
+
+                    if (typeof Chart !== 'undefined') {
+                        // Proceed with creating the chart
+                        var financialChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+
+                                labels: @json($chartLabels), // PHP data for the x-axis labels (dates)
+                                datasets: [
+                                    {
+                                        label: 'Income',
+                                        data: @json($incomeData), // PHP data for income values
+                                        borderColor: 'green',
+                                        fill: false
+                                    },
+                                    {
+                                        label: 'Expenses',
+                                        data: @json($expenseData), // PHP data for expense values
+                                        borderColor: 'red',
+                                        fill: false
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: true,
+                                scales: {
+                                    x: {
+                                        title: {
+                                            display: true,
+                                            text: 'Date'
+                                        }
+                                    },
+                                    y: {
+                                        title: {
+                                            display: true,
+                                            text: 'Amount (Ksh)'
+                                        },
+                                        beginAtZero: true  // Ensures the y-axis starts at 0
+                                    }
                                 }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false
-                        }
-                    });
+                            }
+                        });
+                    } else {
+                        console.error('Chart.js is not loaded');
+                    }
                 });
-            </script> --}}
+            </script>
+
 
         </main>
     </div>

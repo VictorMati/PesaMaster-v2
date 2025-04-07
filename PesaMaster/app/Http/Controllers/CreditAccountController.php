@@ -3,62 +3,38 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\CreditAccount;
+use App\Models\CreditTransaction;
+use Illuminate\Support\Facades\Auth;
 
 class CreditAccountController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $creditAccounts = CreditAccount::where('user_id', Auth::id())->get();
+        return view('credit_accounts.index', compact('creditAccounts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('credit_accounts.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'credit_limit' => 'required|numeric|min:0',
+            'current_balance' => 'required|numeric|min:0',
+            'status' => 'required|string',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        CreditAccount::create([
+            'user_id' => Auth::id(),
+            'credit_limit' => $request->credit_limit,
+            'current_balance' => $request->current_balance,
+            'status' => $request->status,
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('credit_accounts.index')->with('success', 'Credit account created successfully.');
     }
 }

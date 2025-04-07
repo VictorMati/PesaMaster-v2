@@ -17,4 +17,10 @@ class MpesaTransaction extends Model
     {
         return $this->belongsTo(User::class);
     }
+    
+    // MpesaTransaction.php
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
 }

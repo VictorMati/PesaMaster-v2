@@ -11,7 +11,7 @@ class Transaction extends Model
 
     protected $fillable = [
         'user_id', 'business_id', 'amount', 'type', 'transaction_date',
-        'status', 'description', 'payment_method'
+        'status', 'description', 'payment_method', 'phone_number'
     ];
 
     public function user()
@@ -22,5 +22,10 @@ class Transaction extends Model
     public function business()
     {
         return $this->belongsTo(Business::class);
+    }
+
+    public function mpesaTransaction()
+    {
+        return $this->hasOne(MpesaTransaction::class);
     }
 }

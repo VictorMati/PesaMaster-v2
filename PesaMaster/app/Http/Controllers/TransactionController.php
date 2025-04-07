@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Account;
+use App\Models\MpesaTransaction;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 
 class TransactionController extends Controller
 {
@@ -20,7 +22,7 @@ class TransactionController extends Controller
         // Filtering logic
         $query = Transaction::where('user_id', $user->id);
 
-        if ($request->has('type') && in_array($request->type, ['income', 'expense'])) {
+        if ($request->has('type') && in_array($request->type, ['deposit', 'payment'])) {
             $query->where('type', $request->type);
         }
 
@@ -60,24 +62,64 @@ class TransactionController extends Controller
             ->with('success', 'Transaction deleted successfully.');
     }
 
-
-
     /**
-     * Show the form for creating a new resource.
+     * Show form to create a new transaction.
      */
     public function create()
     {
-        //
+        return view('transactions.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created transaction.
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'amount' => 'required|numeric|min:1|max:150000',
+            'type' => 'required|in:deposit,payment',
+            'payment_method' => 'required|in:cash,mpesa',
+            'phone_number' => 'nullable|required_if:payment_method,mpesa|regex:/^0[1]\d{8}$/', // Kenyan format validation
+            'description' => 'nullable|string|max:255',
+        ]);
 
+        $user = Auth::user();
+
+        // Create the base transaction record
+        $transaction = Transaction::create([
+            'user_id' => $user->id,
+            'amount' => $request->amount,
+            'type' => $request->type,
+            'payment_method' => $request->payment_method,
+            'phone_number' => $request->phone_number,
+            'description' => $request->description,
+            'transaction_date' => now(),
+            'status' => $request->payment_method == 'cash' ? 'completed' : 'pending',
+        ]);
+
+        // For cash transactions, we're done
+        if ($request->payment_method == 'cash') {
+            return redirect()->route('transactions.index')
+                ->with('success', 'Cash transaction recorded successfully!');
+        }
+
+
+
+        if ($request->payment_method == 'mpesa') {
+            // Trigger the STK push via internal POST request
+            app(\App\Http\Controllers\MpesaTransactionController::class)
+            ->stkPush(new Request([
+                'transaction_id' => $transaction->id,
+                'phone' => $request->phone_number,
+                'amount' => $request->amount
+            ]));
+
+
+            return redirect()->route('transactions.index')
+                ->with('success', 'M-Pesa STK Push sent. Please check your phone to complete payment.');
+        }
+
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -94,5 +136,4 @@ class TransactionController extends Controller
     {
         //
     }
-
 }

@@ -7,16 +7,46 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
     <!-- Styles -->
     @vite(['resources/css/layout.css', 'resources/js/layout.js'])
 </head>
 <body class="font-sans antialiased">
+    @if (session('success') || session('error') || session('info') || $errors->any())
+        <div id="notification"
+            class="notification {{ session('success') ? 'success' : '' }} {{ session('error') || $errors->any() ? 'error' : '' }} {{ session('info') ? 'info' : '' }}"
+            style="height: 50px; display:flex; align-items:center;">
+            @if (session('success'))
+                <i class="fa fa-check-circle"></i> {{ session('success') }}
+            @elseif (session('error'))
+                <i class="fa fa-times-circle"></i> {{ session('error') }}
+            @elseif (session('info'))
+                <i class="fa fa-info-circle"></i> {{ session('info') }}
+            @elseif ($errors->any())
+                <i class="fa fa-times-circle"></i> {{ $errors->first() }}
+            @endif
+        </div>
+
+        <script>
+            setTimeout(() => {
+                const notification = document.getElementById('notification');
+                if (notification) {
+                    notification.classList.add('fade-out');
+                    setTimeout(() => notification.remove(), 1000); // Optionally remove it after fade
+                }
+            }, 3000);
+        </script>
+    @endif
+
+
     <div class="layout-container">
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -28,13 +58,16 @@
             <nav class="sidebar-nav">
                 <ul>
                     <li><i class="fa-solid fa-chart-line"></i> <a href="{{ route('dashboard') }}">Dashboard</a></li>
+                    <li><i class="fa-solid fa-money-bill-transfer"></i> <a href="{{ route('transactions.create') }}"> Add Transaction</a></li>
                     <li><i class="fa-solid fa-money-bill-transfer"></i> <a href="{{ route('transactions.index') }}"> Transactions</a></li>
-                    <li><i class="fa-solid fa-wallet"></i><a href="#"> Accounts</a></li>
-                    <li><i class="fa-solid fa-coins"></i><a href="#"> Budget</a></li>
-                    <li><i class="fa-solid fa-piggy-bank"></i><a href="#"> Savings</a></li>
-                    <li><i class="fa-solid fa-chart-pie"></i><a href="#"> Investments</a></li>
-                    <li><i class="fa-solid fa-file-invoice-dollar"></i><a href="#"i> Reports</a></li>
-                    <li><i class="fa-solid fa-headset"></i><a href="#"> Support</a></li>
+                    <li><i class="fa-solid fa-wallet"></i><a href="{{ route('accounts.index') }}"> Credit Accounts</a></li>
+                    <li><i class="fa-solid fa-bank"></i><a href="{{ route('credit_accounts.index') }}"> Credit</a></li>
+                    <li><i class="fa-solid fa-coins"></i><a href="{{ route('budgets.index') }}"> Budget</a></li>
+
+                    {{-- <li><i class="fa-solid fa-chart-pie"></i><a href="#"> Investments</a></li> --}}
+                    <li><i class="fa-solid fa-file-invoice-dollar"></i><a href="{{ route('reports.create') }}"i> Reports</a></li>
+                    <li><i class="fa-solid fa-headset"></i><a href="{{ route('support.form') }}"> Support</a></li>
+                    {{-- <li><i class="fa-solid fa-fa-settings"></i><a href="#"> Settings</a></li> --}}
                     <li>
                         <i class="fa-solid fa-sign-out-alt"></i>
                         <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -55,16 +88,23 @@
                 <div class="header-left">
                     <h1>Welcome, {{ Auth::user()->firstname ?? 'User' }}</h1>
                 </div>
+                <!-- In your HTML header section -->
                 <div class="header-right">
                     <input type="text" placeholder="Search..." class="search-bar">
                     <div class="profile">
-                        <img src="{{ asset('images/logo.png') }}" alt="profile image">
-                        <select name="profile-dropdown" id="profile-dropdown">
-                            <option value="profile"><a href=" {{ route('profile.edit') }} ">profile</a><i class="icon-user"></i></option>
-                            <option value="settings"><a href="">Settings</a><i class="icon-settings"></i></option>
-                            <option value="logout"><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">logout</a>
-                                <i class="icon-logout"></i></option>
-                        </select>
+                        <img src="{{ asset('images/logo.png') }}" alt="profile image" class="profile-img">
+                        <div class="profile-menu">
+                            <a href="{{ route('profile.profile') }}" class="profile-link">
+                                <i class="fa-solid fa-user"></i> Profile
+                            </a>
+                            <a href="#" class="profile-link">
+                                <i class="fa-solid fa-gear"></i> Settings
+                            </a>
+                            <a href="{{ route('logout') }}" class="profile-link"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                            </a>
+                        </div>
                     </div>
                 </div>
             </header>

@@ -1,0 +1,216 @@
+/* transaction.css */
+@import url('root.css');
+
+/* Base Container Styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+/* Heading Styles */
+h1 {
+    color: var(--text-dark);
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-lg);
+    font-weight: 600;
+}
+
+/* Filter Form Styles */
+.filter-container {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.filter {
+    flex: 1;
+    min-width: 200px;
+}
+
+.type-filter-selection,
+.form-control {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--accent-color);
+    border-radius: var(--border-radius);
+    background: var(--bg-light);
+}
+
+button[type="submit"] {
+    background: var(--accent-color);
+    color: var(--text-light);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    align-self: flex-end;
+}
+
+/* Table Container & Scroll */
+.table-container {
+    overflow-x: auto;
+    background: var(--bg-light);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: var(--spacing-md);
+}
+
+/* Transactions Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+th, td {
+    padding: var(--spacing-sm);
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background: var(--accent-color);
+    color: var(--text-light);
+    position: sticky;
+    top: 0;
+}
+
+tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Badge Styles */
+.badge {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+}
+
+.bg-success { background: var(--success-color); }
+.bg-danger { background: var(--error-color); }
+
+/* Form Styles */
+.form-label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-md);
+}
+
+.d-none { display: none; }
+
+/* Card Styles */
+.card {
+    background: var(--bg-light);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.card-body p {
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Button Styles */
+.btn {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--accent-color);
+    color: var(--text-light);
+}
+
+.btn-secondary {
+    background: var(--bg-dark);
+    color: var(--text-light);
+}
+
+.btn-danger {
+    background: var(--error-color);
+    color: var(--text-light);
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Pagination Styles */
+.pagination-links {
+    margin-top: var(--spacing-lg);
+    display: flex;
+    justify-content: center;
+}
+
+.pagination-links .page-link {
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin: 0 var(--spacing-xs);
+    border-radius: var(--border-radius);
+    background: var(--bg-light);
+    color: var(--accent-color);
+}
+
+.pagination-links .page-item.active .page-link {
+    background: var(--accent-color);
+    color: var(--text-light);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: var(--spacing-md);
+    }
+
+    table {
+        min-width: 100%;
+    }
+
+    th, td {
+        padding: var(--spacing-xs);
+        font-size: var(--font-size-sm);
+    }
+
+    .filter-container {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .card-body p {
+        font-size: var(--font-size-sm);
+    }
+
+    /* Hide less important columns on mobile */
+    td:nth-child(5),
+    td:nth-child(6),
+    th:nth-child(5),
+    th:nth-child(6) {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: var(--font-size-lg);
+    }
+
+    .btn {
+        padding: var(--spacing-xs) var(--spacing-md);
+        font-size: var(--font-size-sm);
+    }
+
+    .form-control {
+        font-size: var(--font-size-sm);
+    }
+}

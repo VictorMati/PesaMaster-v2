@@ -13,6 +13,6 @@ class MpesaTransactionSeeder extends Seeder
      */
     public function run(): void
     {
-        MpesaTransaction::factory()->count(10)->create();
+        MpesaTransaction::factory()->count(50)->create();
     }
 }

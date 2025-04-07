@@ -27,13 +27,26 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('dashboard')); // Use named route instead of hardcoded path
+
+            $user = Auth::user();
+            dd($user->user_type);
+
+
+            // Redirect based on user type
+            if (strtolower($user->user_type) === 'admin') {
+                return redirect()->intended(route('admin.dashboard'));
+            }
+
+
+            // Default: owner or other types
+            return redirect()->intended(route('dashboard'));
         }
 
         return back()->withErrors([
-            'staff_no' => 'The provided credentials are incorrect.', // More secure error message
+            'staff_no' => 'The provided credentials are incorrect.',
         ])->onlyInput('staff_no');
     }
+
 
     public function logout(Request $request)
     {

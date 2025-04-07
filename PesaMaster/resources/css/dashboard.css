@@ -8,33 +8,53 @@
     margin: 0;
 }
 
-/* Main Content */
-.main-content {
-    flex: 1;
-    padding: var(--spacing-sm);
-    background-color: var(--bg-light);
-}
-
-/* Header */
-.main-content h1 {
-    font-size: var(--font-size-lg);
-    margin-bottom: var(--spacing-sm);
-}
-
 /* Widgets Container */
 .widgets-container {
     display: flex;
     gap: var(--spacing-md);
+    flex-wrap: wrap;
 }
 
 /* Individual Widgets */
 .widget {
     background: var(--text-light);
     padding: var(--spacing-md);
-    width: 35%;
+    width: 250px;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     transition: transform 0.3s ease;
+}
+
+.chart-widget {
+    position: relative;
+    height: 400px;  /* Adjust height as needed */
+    width: 500px;    /* Ensure the container takes the full width */
+    max-width: 100%;
+    background: var(--text-light);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease;
+}
+
+
+#financialChart {
+    width: 100% !important;  /* Ensure the canvas takes the full width of the container */
+    height: 100% !important; /* Ensure the canvas takes the full height of the container */
+}
+
+
+.transactions-widget {
+    background: var(--text-light);
+    padding: var(--spacing-md);
+    width: 320px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease;
+}
+
+.transactions-widget span {
+    color: var(--accent-color);
 }
 
 .widget:hover {
@@ -47,17 +67,18 @@
 }
 
 /* Transactions List */
-.widget ul {
+.transactions-widget ul {
     list-style: none;
     padding: 0;
 }
 
-.widget ul li {
-    background: var(--bg-dark);
-    color: var(--text-light);
+.transactions-widget ul li {
+    color: var(--text-dark);
     padding: var(--spacing-sm);
     margin-bottom: var(--spacing-xs);
+    border: 1px solid var(--accent-color);
     border-radius: var(--border-radius);
+    text-decoration: none;
 }
 
 /* Budget Status */
@@ -70,18 +91,6 @@
 @media (max-width: 768px) {
     .dashboard-container {
         flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        text-align: center;
-        padding: var(--spacing-md);
-    }
-
-    .sidebar ul {
-        display: flex;
-        justify-content: center;
-        gap: var(--spacing-md);
     }
 
     .main-content {

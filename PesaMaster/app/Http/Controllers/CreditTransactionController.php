@@ -3,62 +3,38 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\CreditAccount;
+use App\Models\CreditTransaction;
+use Illuminate\Support\Facades\Auth;
 class CreditTransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $transactions = CreditTransaction::with('creditAccount')
+            ->whereHas('creditAccount', function ($query) {
+                $query->where('user_id', Auth::id());
+            })->get();
+
+        return view('credit_transactions.index', compact('transactions'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $creditAccounts = CreditAccount::where('user_id', Auth::id())->get();
+        return view('credit_transactions.create', compact('creditAccounts'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'credit_account_id' => 'required|exists:credit_accounts,id',
+            'type' => 'required|string',
+            'amount' => 'required|numeric|min:0',
+            'description' => 'nullable|string',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        CreditTransaction::create($request->all());
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('credit_transactions.index')->with('success', 'Transaction recorded successfully.');
     }
 }

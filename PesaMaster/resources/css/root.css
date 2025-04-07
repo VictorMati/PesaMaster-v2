@@ -24,7 +24,7 @@
     /* Typography */
     --font-family: 'Figtree', sans-serif;
     --font-size-base: 16px;
-    --font-size-lg: 18px;
+    --font-size-lg: 22px;
     --font-size-sm: 14px;
 
     /* Spacing */
@@ -108,3 +108,31 @@ a:hover {
     color: darken(var(--accent-color), 10%);
 }
 
+table {
+    padding: 1rem;
+    height: auto;
+}
+
+thead tbody {
+    display: flex;
+    justify-content: space-around;
+}
+
+tr {
+    border-bottom: 1px solid var(--accent-color);
+}
+
+th td {
+    font-family: var(--font-family);
+    font-size: medium;
+}
+
+option {
+    width: 150px;
+    height: 30px;
+    border-radius: 8px;
+}
+
+.container {
+    padding: 5px 10px;
+}

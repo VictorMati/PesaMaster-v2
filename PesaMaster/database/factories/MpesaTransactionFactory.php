@@ -20,7 +20,7 @@ class MpesaTransactionFactory extends Factory
     {
         return [
             'transaction_id' => Str::uuid(), // Generates a unique identifier
-            'user_id' => User::factory(), // Links to a randomly created user
+            'user_id' => 1, // Links to a randomly created user
             'phone_number' => $this->faker->numerify('2547########'),
             'amount' => $this->faker->randomFloat(2, 50, 10000), // Amount between 50 and 10000
             'status' => $this->faker->randomElement(['Success', 'Pending', 'Failed']),

@@ -14,7 +14,7 @@ class ReportFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'user_id' => 1,
             'type' => $this->faker->randomElement(['financial', 'audit', 'usage']),
             'total_income' => $this->faker->randomFloat(2, 500, 50000),
             'total_expenses' => $this->faker->randomFloat(2, 100, 45000),
