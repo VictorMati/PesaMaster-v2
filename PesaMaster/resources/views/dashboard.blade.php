@@ -65,61 +65,108 @@
                 </div>
             </div>
 
-            <!-- Include Chart.js for the line graph -->
+           <!-- Include Chart.js -->
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+
             <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    var ctx = document.getElementById('financialChart').getContext('2d');
+            document.addEventListener("DOMContentLoaded", function () {
+                const ctx = document.getElementById('financialChart').getContext('2d');
 
-                    if (typeof Chart !== 'undefined') {
-                        // Proceed with creating the chart
-                        var financialChart = new Chart(ctx, {
-                            type: 'line',
-                            data: {
+                if (typeof Chart !== 'undefined') {
 
-                                labels: @json($chartLabels), // PHP data for the x-axis labels (dates)
-                                datasets: [
-                                    {
-                                        label: 'Income',
-                                        data: @json($incomeData), // PHP data for income values
-                                        borderColor: 'green',
-                                        fill: false
-                                    },
-                                    {
-                                        label: 'Expenses',
-                                        data: @json($expenseData), // PHP data for expense values
-                                        borderColor: 'red',
-                                        fill: false
+                    // Convert PHP data into JS arrays
+                    const incomeData = @json($incomeData);
+                    const expenseData = @json($expenseData);
+
+                    // Combine all values to compute scale
+                    const allValues = incomeData.concat(expenseData);
+
+                    // Calculate dynamic min & max
+                    const minValue = Math.min(...allValues);
+                    const maxValue = Math.max(...allValues);
+
+                    // Add padding so graph breathes
+                    const padding = 2000;
+
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: @json($chartLabels),
+                            datasets: [
+                                {
+                                    label: 'Income',
+                                    data: incomeData,
+                                    borderColor: 'green',
+                                    backgroundColor: 'rgba(0, 128, 0, 0.1)',
+                                    tension: 0.3
+                                },
+                                {
+                                    label: 'Expenses',
+                                    data: expenseData,
+                                    borderColor: 'red',
+                                    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                                    tension: 0.3
+                                }
+                            ]
+                        },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false, // 🔥 KEY FIX
+
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'day',
+                                    tooltipFormat: 'dd MMM yyyy',
+                                    displayFormats: {
+                                        day: 'dd MMM'
                                     }
-                                ]
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Date'
+                                }
                             },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: true,
-                                scales: {
-                                    x: {
-                                        title: {
-                                            display: true,
-                                            text: 'Date'
-                                        }
-                                    },
-                                    y: {
-                                        title: {
-                                            display: true,
-                                            text: 'Amount (Ksh)'
-                                        },
-                                        beginAtZero: true  // Ensures the y-axis starts at 0
-                                    }
+
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Amount (KES)'
+                                },
+
+                                suggestedMin: Math.max(0, minValue - 3000),
+                                suggestedMax: maxValue + 3000,
+
+                                ticks: {
+                                    stepSize: 5000,
+                                    callback: value => 'KSh ' + value.toLocaleString()
                                 }
                             }
-                        });
-                    } else {
-                        console.error('Chart.js is not loaded');
+                        },
+
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx =>
+                                        `${ctx.dataset.label}: KSh ${ctx.parsed.y.toLocaleString()}`
+                                }
+                            }
+                        }
                     }
-                });
+
+                    });
+
+                } else {
+                    console.error('Chart.js is not loaded');
+                }
+            });
             </script>
-
-
         </main>
     </div>
 @endsection

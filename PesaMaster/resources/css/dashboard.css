@@ -24,24 +24,23 @@
     box-shadow: var(--box-shadow);
     transition: transform 0.3s ease;
 }
-
 .chart-widget {
-    position: relative;
-    height: 400px;  /* Adjust height as needed */
-    width: 50%;    /* Ensure the container takes the full width */
-    max-width: 100%;
+    width: 50%;
+    height: 380px; /* fixed, predictable height */
     background: var(--text-light);
     padding: var(--spacing-md);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
-    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
 }
 
-
-#financialChart {
-    width: 100% !important;  /* Ensure the canvas takes the full width of the container */
-    height: 100% !important; /* Ensure the canvas takes the full height of the container */
+.chart-widget canvas {
+    flex: 1;
+    width: 100% !important;
+    height: 100% !important;
 }
+
 
 
 .transactions-widget {
