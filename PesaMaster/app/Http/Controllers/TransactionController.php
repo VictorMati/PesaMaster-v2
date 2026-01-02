@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Transaction;
-use App\Models\Account;
-use App\Models\MpesaTransaction;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Http;
 
 class TransactionController extends Controller
 {
@@ -79,7 +76,7 @@ class TransactionController extends Controller
             'amount' => 'required|numeric|min:1|max:150000',
             'type' => 'required|in:deposit,payment',
             'payment_method' => 'required|in:cash,mpesa',
-            'phone_number' => 'nullable|required_if:payment_method,mpesa|regex:/^0[1]\d{8}$/', // Kenyan format validation
+            'phone_number' => 'nullable|required_if:payment_method,mpesa|regex:/^2541\d{8}$/', // Match form pattern
             'description' => 'nullable|string|max:255',
         ]);
 
@@ -103,22 +100,17 @@ class TransactionController extends Controller
                 ->with('success', 'Cash transaction recorded successfully!');
         }
 
-
-
+        // For M-Pesa transactions, initiate STK push
         if ($request->payment_method == 'mpesa') {
-            // Trigger the STK push via internal POST request
-            app(\App\Http\Controllers\MpesaTransactionController::class)
-            ->stkPush(new Request([
+            return app(MpesaTransactionController::class)->stkPush(new Request([
                 'transaction_id' => $transaction->id,
                 'phone' => $request->phone_number,
                 'amount' => $request->amount
             ]));
-
-
-            return redirect()->route('transactions.index')
-                ->with('success', 'M-Pesa STK Push sent. Please check your phone to complete payment.');
         }
 
+        return redirect()->route('transactions.index')
+            ->with('success', 'Transaction created successfully!');
     }
 
     /**

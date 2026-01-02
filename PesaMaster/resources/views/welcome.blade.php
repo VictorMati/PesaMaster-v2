@@ -129,7 +129,7 @@
                         <li>Customizable budgets</li>
                         <li>Export financial reports</li>
                     </ul>
-                    <p class="price">KES 999/month</p>
+                    <p class="price">KES 300/month</p>
                     <a href="{{ route('login') }}" class="cta-button">Upgrade Now</a>
                 </div>
             </div>
@@ -143,8 +143,8 @@
     <section id="contact">
         <div class="container">
             <h2>Contact Us</h2>
-            <p>Email: support@pesamaster.com</p>
-            <p>Phone: +254 123 456 789</p>
+            <p>Email: victormati746@gmail.com</p>
+            <p>Phone: +254 113 392 782</p>
         </div>
     </section>
 

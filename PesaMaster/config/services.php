@@ -30,19 +30,26 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+// Add this to your config/services.php file
 
-    'mpesa' => [
-        'auth_url' => env('MPESA_AUTH_URL', 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'),
-        'stk_push_url' => env('MPESA_STK_PUSH_URL', 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest'),
-        'consumer_key' => env('MPESA_CONSUMER_KEY'),
-        'consumer_secret' => env('MPESA_CONSUMER_SECRET'),
-        'shortcode' => env('MPESA_SHORTCODE'),
-        'passkey' => env('MPESA_PASSKEY'),
-    ],
-    'africas_talking' => [
-        'enabled' => env('AFRICASTALKING_ENABLED', true),
-        'username' => env('AFRICASTALKING_USERNAME'),
-        'api_key' => env('AFRICASTALKING_API_KEY'),
-    ],
+'mpesa' => [
+    'env' => env('MPESA_ENV', 'sandbox'),
+    'consumer_key' => env('MPESA_CONSUMER_KEY'),
+    'consumer_secret' => env('MPESA_CONSUMER_SECRET'),
+    'shortcode' => env('MPESA_SHORTCODE'),
+    'passkey' => env('MPESA_PASSKEY'),
+    'auth_url' => env('MPESA_ENV', 'sandbox') === 'sandbox'
+        ? 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
+        : 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials',
+    'stk_push_url' => env('MPESA_ENV', 'sandbox') === 'sandbox'
+        ? 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest'
+        : 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
+],
+
+'africas_talking' => [
+    'enabled' => env('SMS_ENABLED', false),
+    'username' => env('AT_USERNAME'),
+    'api_key' => env('AT_API_KEY'),
+],
 
 ];

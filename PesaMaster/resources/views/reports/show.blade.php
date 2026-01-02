@@ -34,4 +34,7 @@
             <p>Amount: {{ $transaction->amount }} - Reason: {{ $transaction->description }}</p>
         @endforeach
     @endif
+
+    <br>
+    
 @endsection

@@ -18,6 +18,25 @@
 
     <!-- Styles -->
     @vite(['resources/css/layout.css', 'resources/js/layout.js'])
+    <head>
+        <!-- Other meta and link tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <title>{{ config('app.name', 'Laravel') }}</title>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- HTMX CDN -->
+        <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+        <!-- Styles -->
+        @vite(['resources/css/layout.css', 'resources/js/layout.js'])
+    </head>
+
 </head>
 <body class="font-sans antialiased">
     @if (session('success') || session('error') || session('info') || $errors->any())
@@ -60,7 +79,7 @@
                     <li><i class="fa-solid fa-chart-line"></i> <a href="{{ route('dashboard') }}">Dashboard</a></li>
                     <li><i class="fa-solid fa-money-bill-transfer"></i> <a href="{{ route('transactions.create') }}"> Add Transaction</a></li>
                     <li><i class="fa-solid fa-money-bill-transfer"></i> <a href="{{ route('transactions.index') }}"> Transactions</a></li>
-                    <li><i class="fa-solid fa-wallet"></i><a href="{{ route('accounts.index') }}"> Credit Accounts</a></li>
+                    <li><i class="fa-solid fa-wallet"></i><a href="{{ route('accounts.index') }}"> My Accounts</a></li>
                     <li><i class="fa-solid fa-bank"></i><a href="{{ route('credit_accounts.index') }}"> Credit</a></li>
                     <li><i class="fa-solid fa-coins"></i><a href="{{ route('budgets.index') }}"> Budget</a></li>
 
@@ -90,7 +109,21 @@
                 </div>
                 <!-- In your HTML header section -->
                 <div class="header-right">
-                    <input type="text" placeholder="Search..." class="search-bar">
+                    <form class="search-form" onsubmit="return false;">
+                        <input
+                            type="text"
+                            name="query"
+                            placeholder="Search for transactions, reports, credit accounts..."
+                            class="search-bar"
+                            autocomplete="off"
+                            hx-get="{{ route('search') }}"
+                            hx-trigger="keyup changed delay:300ms"
+                            hx-target="#search-results"
+                            hx-swap="innerHTML" onfocus="displayFunction()">
+                    </form>
+
+
+
                     <div class="profile">
                         <img src="{{ asset('images/logo.png') }}" alt="profile image" class="profile-img">
                         <div class="profile-menu">
@@ -108,6 +141,18 @@
                     </div>
                 </div>
             </header>
+            <script>
+                displayFunction(){
+                    const search = document.getElementById("search-results");
+                        search.classList.add.style = "display: block;";
+                }
+            </script>
+
+            <!-- Search Results Container -->
+            <!-- Search Results Container -->
+<div id="search-results" class="search-results-container" style="display: none;"></div>
+
+
 
             <!-- Page Content -->
             <main class="content">

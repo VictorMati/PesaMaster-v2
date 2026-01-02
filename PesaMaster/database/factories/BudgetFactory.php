@@ -13,7 +13,7 @@ class BudgetFactory extends Factory
 
     public function definition(): array
     {
-        $budgetLimit = $this->faker->randomFloat(2, 100, 10000);
+        $budgetLimit = $this->faker->randomFloat(2, 100, 100000);
         $currentExpense = $this->faker->randomFloat(2, 0, $budgetLimit * 0.9); // Ensure it doesn't always exceed
 
         return [

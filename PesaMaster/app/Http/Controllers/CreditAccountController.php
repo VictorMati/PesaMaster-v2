@@ -37,4 +37,9 @@ class CreditAccountController extends Controller
 
         return redirect()->route('credit_accounts.index')->with('success', 'Credit account created successfully.');
     }
+
+    public function edit(Request $request){
+        return view('credit_accounts.edit');
+    }
+
 }

@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\MpesaTransactionController;
+use App\Http\Controllers\MpesaController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,3 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::post('/mpesa/stk-push', [MpesaTransactionController::class, 'stkPush'])->name('mpesa.stk-push');
+Route::post('/mpesa/callback', [MpesaTransactionController::class, 'mpesaCallback'])->name('mpesa.callback');
+
+Route::post('/mpesa/callback', [MpesaTransactionController::class, 'handleCallback']);

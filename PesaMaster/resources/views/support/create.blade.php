@@ -19,7 +19,7 @@
             @error('message')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
-        </div>
+        </div><br>
 
         <button type="submit" class="btn btn-primary">
             <i class="fas fa-paper-plane me-2"></i> Send Message

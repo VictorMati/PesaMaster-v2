@@ -13,11 +13,19 @@ class MpesaTransaction extends Model
         'status', 'receipt_number', 'transaction_date', 'response_code', 'response_message'
     ];
 
+    // In your MpesaTransaction model
+    const STATUSES = [
+        'pending' => 'Pending',
+        'completed' => 'Completed',
+        'failed' => 'Failed',
+        'reversed' => 'Reversed'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    
+
     // MpesaTransaction.php
     public function transaction()
     {

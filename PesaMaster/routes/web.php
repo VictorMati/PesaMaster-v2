@@ -9,7 +9,9 @@ use App\Http\Controllers\CreditAccountController;
 use App\Http\Controllers\CreditTransactionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SupportController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\MpesaTransactionController;
+
 
 use App\Http\Controllers\Admin\AdminDashboardController;
 
@@ -28,11 +30,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware(['auth', 'is_admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
-    Route::get('/logs', [AdminLogController::class, 'index'])->name('logs.index');
-    Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings');
-    Route::get('/support', [AdminSupportController::class, 'index'])->name('support');
-    Route::get('/profile', [AdminProfileController::class, 'show'])->name('profile');
+    // Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+    // Route::get('/logs', [AdminLogController::class, 'index'])->name('logs.index');
+    // Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings');
+    // Route::get('/support', [AdminSupportController::class, 'index'])->name('support');
+    // Route::get('/profile', [AdminProfileController::class, 'show'])->name('profile');
 });
 
 
@@ -50,8 +52,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('transactions', TransactionController::class);
 });
 
-Route::post('/mpesa/stk-push', [MpesaTransactionController::class, 'stkPush'])->name('mpesa.stk-push');
-Route::post('/mpesa/callback', [MpesaTransactionController::class, 'mpesaCallback'])->name('mpesa.callback');
+
 
 
 Route::middleware(['auth'])->group(function () {
@@ -96,9 +97,25 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/support', [SupportController::class, 'create'])->name('support.create');
-    Route::post('/support', [SupportController::class, 'store'])->name('support.store');
+    // Route to show the support request form
+    Route::get('support', [SupportController::class, 'create'])->name('support.form');
+
+    // Route to handle form submission
+    // Route::post('support', [SupportController::class, 'store'])->name('support.store');
+    Route::post('support/create', [SupportController::class, 'store'])->name('support.store');
 });
+
+// M-Pesa routes
+Route::post('/mpesa/stk-push', [MpesaTransactionController::class, 'stkPush'])->name('mpesa.stk-push');
+Route::post('/mpesa/callback', [MpesaTransactionController::class, 'mpesaCallback'])->name('mpesa.callback');
+
+// In your routes file
+Route::post('/stk-push', [MpesaTransactionController::class, 'stkPush'])
+     ->middleware('throttle:3,1'); // 3 attempts per minute
+
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+
 
 
 require __DIR__.'/auth.php';

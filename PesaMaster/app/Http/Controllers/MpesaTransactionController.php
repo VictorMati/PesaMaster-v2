@@ -4,145 +4,138 @@ namespace App\Http\Controllers;
 
 use App\Models\MpesaTransaction;
 use App\Models\Transaction;
+use App\Services\MpesaService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class MpesaTransactionController extends Controller
 {
-    protected $consumerKey;
-    protected $consumerSecret;
-    protected $shortcode;
-    protected $passkey;
-    protected $atUsername;
-    protected $atApiKey;
+    protected $mpesaService;
 
-    public function __construct()
+    public function __construct(MpesaService $mpesaService)
     {
-        $this->consumerKey = config('services.mpesa.consumer_key');
-        $this->consumerSecret = config('services.mpesa.consumer_secret');
-        $this->shortcode = config('services.mpesa.shortcode');
-        $this->passkey = config('services.mpesa.passkey');
-        $this->atUsername = config('services.africas_talking.username');
-        $this->atApiKey = config('services.africas_talking.api_key');
+        $this->mpesaService = $mpesaService;
     }
 
-    private function getAccessToken()
-    {
-        try {
-            $response = Http::withBasicAuth($this->consumerKey, $this->consumerSecret)
-                ->get(config('services.mpesa.auth_url'));
+    /**
+     * Initiate STK Push to customer's phone
+     */
 
-            if (!$response->successful()) {
-                Log::error('MPESA Auth Failed', ['response' => $response->body()]);
-                return null;
-            }
+     public function stkPush(Request $request)
+     {
+         // In MpesaTransactionController.php
+            $validated = $request->validate([
+                'phone' => [
+                    'required',
+                    'regex:/^254[1]\d{8}$/' // Allow 2547... and 2541... numbers
+                ],
+                'amount' => 'required|numeric|min:1|max:150000',
+                'transaction_id' => 'required|exists:transactions,id'
+            ]);
 
-            return $response->json()['access_token'];
-        } catch (\Exception $e) {
-            Log::error('MPESA Auth Exception', ['error' => $e->getMessage()]);
-            return null;
-        }
-    }
+         try {
+             $transaction = Transaction::findOrFail($validated['transaction_id']);
 
-    public function stkPush(Request $request)
-    {
-        $validated = $request->validate([
-            'phone' => 'required|regex:/^0[1]\d{8}$/', // Validate Kenyan phone numbers
-            'amount' => 'required|numeric|min:1|max:150000', // MPESA limit
-            'transaction_id' => 'required|exists:transactions,id'
-        ]);
+             if ($transaction->user_id != Auth::id()) {
+                 return back()->with('error', 'Unauthorized action');
+             }
 
-        try {
-            $accessToken = $this->getAccessToken();
-            if (!$accessToken) {
-                return back()->with('error', 'Payment service unavailable. Please try later.');
-            }
+             $response = $this->mpesaService->stkPushRequest(
+                 $validated['amount'],
+                 $validated['phone'],
+                 $validated['transaction_id'],
+                 $transaction->description ?? 'Payment for services'
+             );
 
-            $timestamp = now()->format('YmdHis');
-            $password = base64_encode($this->shortcode . $this->passkey . $timestamp);
-            $phone = '254' . substr($validated['phone'], 1);
+             // Handle service-level errors
+             if (isset($response['error'])) {
+                 Log::error('MPESA Service Error', ['response' => $response]);
+                 return back()->with('error', $response['error']);
+             }
 
-            $payload = [
-                'BusinessShortCode' => $this->shortcode,
-                'Password' => $password,
-                'Timestamp' => $timestamp,
-                'TransactionType' => 'CustomerPayBillOnline',
-                'Amount' => $validated['amount'],
-                'PartyA' => $phone,
-                'PartyB' => $this->shortcode,
-                'PhoneNumber' => $phone,
-                'CallBackURL' => route('mpesa.callback'),
-                'AccountReference' => 'Transaction#' . $validated['transaction_id'],
-                'TransactionDesc' => 'Payment for services',
-                'CallBackURL' => route('mpesa.callback'),
-            ];
+             // Handle API response errors
+             if (!isset($response['ResponseCode']) || $response['ResponseCode'] != '0') {
+                 $errorMessage = $response['errorMessage'] ??
+                                 $response['ResultDesc'] ??
+                                 'Payment initiation failed';
 
-            $response = Http::withToken($accessToken)
-                ->timeout(30)
-                ->retry(3, 100)
-                ->post(config('services.mpesa.stk_push_url'), $payload);
+                 Log::error('MPESA STK Error', ['response' => $response]);
+                 return back()->with('error', $errorMessage);
+             }
 
-            $responseData = $response->json();
+             // Create M-Pesa transaction record
+             MpesaTransaction::create([
+                 'transaction_id' => $validated['transaction_id'],
+                 'merchant_request_id' => $response['MerchantRequestID'],
+                 'checkout_request_id' => $response['CheckoutRequestID'],
+                 'phone_number' => $validated['phone'],
+                 'amount' => $validated['amount'],
+                 'status' => 'pending'
+             ]);
 
-            if ($response->successful() && isset($responseData['ResponseCode']) && $responseData['ResponseCode'] == '0') {
-                MpesaTransaction::create([
-                    'transaction_id' => $validated['transaction_id'],
-                    'merchant_request_id' => $responseData['MerchantRequestID'],
-                    'checkout_request_id' => $responseData['CheckoutRequestID'],
-                    'phone_number' => $phone,
-                    'amount' => $validated['amount'],
-                    'status' => 'pending'
-                ]);
+             return back()->with('success', 'Payment request sent. Check your phone to complete.');
 
-                return back()->with('success', 'Payment request sent. Check your phone to complete.');
-            }
-
-            Log::error('MPESA STK Error', ['response' => $responseData]);
-            return back()->with('error', $responseData['errorMessage'] ?? 'Payment initiation failed.');
-
-        } catch (\Exception $e) {
-            Log::error('STK Push Exception', ['error' => $e->getMessage()]);
-            return back()->with('error', 'Service temporarily unavailable. Please try again.');
-        }
-    }
-
+         } catch (\Exception $e) {
+             Log::error('STK Push Exception', ['error' => $e->getMessage()]);
+             return back()->with('error', 'Service temporarily unavailable. Please try again.');
+         }
+     }
+    /**
+     * Process M-Pesa callback
+     */
     public function mpesaCallback(Request $request)
     {
+
+        // Verify the callback origin
+        if (config('services.mpesa.env') === 'production') {
+            $ip = $request->ip();
+            if (!in_array($ip, ['196.201.214.200', '196.201.214.206'])) {
+                Log::warning('Invalid MPesa Callback IP', ['ip' => $ip]);
+                abort(403, 'Unauthorized');
+            }
+        }
         Log::info('MPESA Callback Received', $request->all());
 
         try {
+            $result = $this->mpesaService->processCallback($request->all());
 
-            $callbackData = $request->input('Body.stkCallback');
-
-            if (!isset($callbackData['CheckoutRequestID'])) {
-                throw new \Exception('Invalid callback format');
+            if (!$result['success']) {
+                Log::error('M-Pesa Callback Processing Error', $result);
+                return response()->json(['status' => 'error', 'message' => $result['message'] ?? 'Processing error'], 400);
             }
 
-            $mpesaTransaction = MpesaTransaction::where('checkout_request_id', $callbackData['CheckoutRequestID'])
-                ->firstOrFail();
+            // Find the M-Pesa transaction
+            $mpesaTransaction = MpesaTransaction::where('checkout_request_id', $result['checkout_request_id'])->first();
 
-            $resultCode = $callbackData['ResultCode'];
-            $success = $resultCode == 0;
-            $status = $success ? 'completed' : 'failed';
+            if (!$mpesaTransaction) {
+                Log::error('M-Pesa Transaction Not Found', ['checkout_request_id' => $result['checkout_request_id']]);
+                return response()->json(['status' => 'error', 'message' => 'Transaction not found'], 404);
+            }
 
-            // Update MPESA transaction
+            // Update M-Pesa transaction
             $mpesaTransaction->update([
-                'result_code' => $resultCode,
-                'result_desc' => $callbackData['ResultDesc'],
-                'status' => $status,
-                'response_data' => json_encode($callbackData)
+                'result_code' => 0, // Success
+                'result_desc' => $result['result_desc'],
+                'mpesa_receipt_number' => $result['payment_details']['receipt_number'] ?? null,
+                'status' => 'completed',
+                'response_data' => json_encode($request->all())
             ]);
 
             // Update related transaction
             $transaction = Transaction::findOrFail($mpesaTransaction->transaction_id);
-            $transaction->update(['status' => $status]);
+            $transaction->update([
+                'status' => 'completed',
+                'transaction_date' => now()
+            ]);
 
-            // Send SMS notification
+            // Send SMS notification if enabled
             if (config('services.africas_talking.enabled')) {
-                $message = $success ? "Payment of KES {$transaction->amount} received successfully!"
-                                  : "Payment failed. Please try again.";
-                $this->sendSms($mpesaTransaction->phone_number, $message);
+                $this->sendSms(
+                    $mpesaTransaction->phone_number,
+                    "Payment of KES {$transaction->amount} received successfully!"
+                );
             }
 
             return response()->json(['status' => 'success']);
@@ -153,15 +146,18 @@ class MpesaTransactionController extends Controller
         }
     }
 
+    /**
+     * Send SMS notification
+     */
     protected function sendSms($phone, $message)
     {
         try {
             $response = Http::withHeaders([
-                'apiKey' => $this->atApiKey,
+                'apiKey' => config('services.africas_talking.api_key'),
                 'Content-Type' => 'application/x-www-form-urlencoded',
                 'Accept' => 'application/json'
             ])->asForm()->post('https://api.africasTalking.com/version1/messaging', [
-                'username' => $this->atUsername,
+                'username' => config('services.africas_talking.username'),
                 'to' => $phone,
                 'message' => $message,
                 'from' => config('app.name')

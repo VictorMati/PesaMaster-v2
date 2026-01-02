@@ -19,7 +19,7 @@
 .widget {
     background: var(--text-light);
     padding: var(--spacing-md);
-    width: 250px;
+    width: 30%;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     transition: transform 0.3s ease;
@@ -28,7 +28,7 @@
 .chart-widget {
     position: relative;
     height: 400px;  /* Adjust height as needed */
-    width: 500px;    /* Ensure the container takes the full width */
+    width: 50%;    /* Ensure the container takes the full width */
     max-width: 100%;
     background: var(--text-light);
     padding: var(--spacing-md);
@@ -47,7 +47,7 @@
 .transactions-widget {
     background: var(--text-light);
     padding: var(--spacing-md);
-    width: 320px;
+    width: 40%;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     transition: transform 0.3s ease;

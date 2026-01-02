@@ -31,7 +31,15 @@
             <div id="mpesaDetails" class="d-none">
                 <div class="mb-3">
                     <label for="phone_number" class="form-label">Customer's Phone Number</label>
-                    <input type="text" name="phone_number" id="phone_number" class="form-control" required>
+                    <input
+                        type="tel"
+                        name="phone_number"
+                        id="phone_number"
+                        class="form-control"
+                        required
+                        pattern="^2541\d{8}$"
+                        placeholder="e.g. 254712345678"
+                        title="Enter a valid Kenyan phone number in the format 2541XXXXXXXX">
                 </div>
             </div>
 
